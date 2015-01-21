@@ -32,7 +32,7 @@ class List
   end
 
   define_method(:==) do |another_list|
-    self.name().==(another_list.name()).&(self.id().==(another_list.id()))
+    self.name().==(another_list.name()).&self.id().==(another_list.id()).&self.due_date().==(another_list.due_date())
   end
 
   define_method(:tasks) do
@@ -40,8 +40,9 @@ class List
     tasks = DB.exec("SELECT * FROM tasks WHERE list_id = #{self.id()};")
     tasks.each() do |task|
       description = task["description"]
+      due_date = task["due_date"]
       list_id = task["list_id"].to_i()
-      list_tasks.push(Task.new({:description => description, :list_id => list_id}))
+      list_tasks.push(Task.new({:description => description, :due_date => due_date, :list_id => list_id}))
     end
     list_tasks
   end
